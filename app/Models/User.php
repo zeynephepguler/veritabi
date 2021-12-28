@@ -1,41 +1,58 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
-use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
-use Illuminate\Contracts\Auth\Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Eloquent implements Authenticatable
+class User extends Authenticatable
 {
-    use AuthenticatableTrait;
-
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var string[]
      */
     protected $fillable = [
-        'name', 'email', 'password','role',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
      * @var array
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+}
+
+
+$collection  =  ( new  MongoDB\Client ) -> test -> users ;
+
+$insertOneResult  =  $collection -> insertOne ([
+    'kullanıcı adı'  =>  'yönetici' ,
+    'email'  =>  'admin@example.com' ,
+    'ad'  =>  'Yönetici Kullanıcı' ,
+]);
+
+printf ( "%d belge(ler) eklendi \n " ,  $insertOneResult -> getInsertedCount ());
+
+var_dump ( $insertOneResult -> getInsertedId ());
 }
